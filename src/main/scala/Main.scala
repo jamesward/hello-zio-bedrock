@@ -22,7 +22,7 @@ object Main extends ZIOAppDefault:
     Bedrock.converse("Worst food").asResponse[Food].debug("detailed response with structured output").run
 
     Bedrock.converse("Write a poem about Scala").textStream
-      .runForeach(Console.print(_).orDie).debug.run
+      .runForeach(Console.print(_).orDie).run
 
 
     // TOOL LOOP
@@ -30,17 +30,15 @@ object Main extends ZIOAppDefault:
     val tools = (
       // note that inputs & outputs can be classes with Schemas to provide property descriptions
       randomLetters = ToolHandler(
-        (n: Int) => Random.nextPrintableChar.replicateZIO(n).map(_.mkString).debug("random letters"),
+        (n: Int) => Random.nextPrintableChar.replicateZIO(n).map(_.mkString).debug("\nrandom letters"),
         "generate n number of random letters"
       ),
-      reverse = ToolHandler.fromPure((s: String) => s.reverse, "reverse a string")
+      reverse = ToolHandler.fromPure((s: String) => { println("\nreverse"); s.reverse }, "reverse a string")
     )
 
     Bedrock.loop("generate 8 random letters", tools).text.debug("multi-turn loop with tool call").run
 
     Bedrock.loop("display 8 random letters and its reverse", tools)
-      .textStream.runForeach(Console.print(_).orDie).debug.run
-
-    "" // end of program - just here to avoid seeing () at the end of the output
+      .textStream.runForeach(Console.print(_).orDie).run
 
   def run = program.provide(Client.default, Bedrock.Client.live)
