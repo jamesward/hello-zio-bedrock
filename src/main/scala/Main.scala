@@ -27,18 +27,34 @@ object Main extends ZIOAppDefault:
 
     // TOOL LOOP
 
+    // note that inputs & outputs can be classes with Schemas to provide property descriptions
     val tools = (
-      // note that inputs & outputs can be classes with Schemas to provide property descriptions
+      // tool with side effects
       randomLetters = ToolHandler(
-        (n: Int) => Random.nextPrintableChar.replicateZIO(n).map(_.mkString).debug("\nrandom letters"),
+        (n: Int) => Random.nextIntBounded(26).replicateZIO(n).map(_.map(i => ('a' + i).toChar).mkString).debug("\nrandom letters"),
         "generate n number of random letters"
       ),
+      // pure tool
       reverse = ToolHandler.fromPure((s: String) => { println("\nreverse"); s.reverse }, "reverse a string")
     )
 
     Bedrock.loop("generate 8 random letters", tools).text.debug("multi-turn loop with tool call").run
 
+    Bedrock.loop("generate 8 random letters and then come up with a food name that is similar", tools).as[Food].debug("multi-turn with structured outputs").run
+
+    // multiple tool calls
     Bedrock.loop("display 8 random letters and its reverse", tools)
       .textStream.runForeach(Console.print(_).orDie).run
+
+
+    // SINGLE TURN WITH TOOLS
+
+    // we must handle all the possible tool calls
+    Bedrock.request("generate a 16 character random string", tools).fold[Unit]:
+      (
+        randomLetters = s => println(s"tool result: $s"),
+        reverse = s => println("should not happen")
+      )
+    .run
 
   def run = program.provide(Client.default, Bedrock.Client.live)
