@@ -3,3 +3,6 @@
 /target/
 /project/target/
 /project/project/
+
+# Agent Skills extracted by the build
+/.kiro/skills/
