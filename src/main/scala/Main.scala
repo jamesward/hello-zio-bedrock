@@ -1,5 +1,5 @@
-import com.jamesward.zio_bedrock_converse.Bedrock
-import com.jamesward.zio_bedrock_converse.Bedrock.ToolHandler
+import com.jamesward.zio_bedrock.{Bedrock, Converse}
+import com.jamesward.zio_bedrock.Bedrock.ToolHandler
 import zio.*
 import zio.http.*
 import zio.direct.*
@@ -13,15 +13,15 @@ object Main extends ZIOAppDefault:
 
     // BASIC INFERENCE
 
-    Bedrock.converse("say hello").text.debug("basic text").run
+    Bedrock.chat("say hello").text.debug("basic text").run
 
-    Bedrock.converse("Favorite food").as[Food].debug("structured output").run
+    Bedrock.chat("Favorite food").as[Food].debug("structured output").run
 
-    Bedrock.converse("tell a one-line joke").asResponse.debug("detailed response").run
+    Bedrock.chat("tell a one-line joke").asResponse.debug("detailed response").run
 
-    Bedrock.converse("Worst food").asResponse[Food].debug("detailed response with structured output").run
+    Bedrock.chat("Worst food").asResponse[Food].debug("detailed response with structured output").run
 
-    Bedrock.converse("Write a poem about Scala").textStream
+    Bedrock.chat("Write a poem about Scala").textStream
       .runForeach(Console.print(_).orDie).run
 
 
@@ -57,4 +57,4 @@ object Main extends ZIOAppDefault:
       )
     .run
 
-  def run = program.provide(Client.default, Bedrock.Client.live)
+  def run = program.provide(Converse.live)
