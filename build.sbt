@@ -9,7 +9,7 @@ fork := true
 // SkillsJars: extract agent Skills with `./sbta extractSkillsJars`
 skillsJarsOutputDir := Some(file(".kiro/skills"))
 
-libraryDependencies += "com.jamesward" % "skills" % "0.0.14" % Skills
+libraryDependencies += "com.jamesward" % "skills" % "0.0.17" % Skills
 
 scalacOptions ++= Seq(
   "-language:strictEquality",
