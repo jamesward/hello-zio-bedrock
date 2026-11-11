@@ -1,4 +1,4 @@
-scalaVersion := "3.10.0"
+scalaVersion := "3.10.1"
 
 name := "hello-zio-bedrock"
 
@@ -9,7 +9,7 @@ fork := true
 // SkillsJars: extract agent Skills with `./sbta extractSkillsJars`
 skillsJarsOutputDir := Some(file(".kiro/skills"))
 
-libraryDependencies += "com.jamesward" % "skills" % "0.0.22" % Skills
+libraryDependencies += "com.jamesward" % "skills" % "0.0.24" % Skills
 
 scalacOptions ++= Seq(
   "-language:strictEquality",
